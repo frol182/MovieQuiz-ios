@@ -2,10 +2,6 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        show(quiz: convert(model: questions[0]))
-    }
   
     private var currentQuestionIndex = 0    // переменная с индексом текущего вопроса
     private var correctAnswers = 0    // переменная со счётчиком правильных ответов
@@ -78,6 +74,11 @@ final class MovieQuizViewController: UIViewController {
         let buttonText: String
     }
   
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        show(quiz: convert(model: questions[0]))
+    }
+    
     // приватный метод конвертации, который принимает моковый вопрос и возвращает вью модель для главного экрана
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
