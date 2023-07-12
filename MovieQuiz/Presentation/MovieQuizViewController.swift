@@ -7,6 +7,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var imageView: UIImageView! //Афиша
     @IBOutlet private var textLabel: UILabel!     //Вопрос
     @IBOutlet private var counterLabel: UILabel!    //Счетчик
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView! //кружок загрузки
     
     private var correctAnswers = 0    // переменная со счётчиком правильных ответов
     private var currentQuestionIndex = 0    // переменная с индексом текущего вопроса
@@ -21,16 +22,20 @@ final class MovieQuizViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.layer.cornerRadius = 20
-        questionFactory = QuestionFactoryImpl(delegate: self)
-        alertPresenter = AlertPresenterImpl(viewController: self)
+        questionFactory = QuestionFactoryImpl(moviesLoader: MoviesLoader(), delegate: self)
         statisticService = StatisticServiceImpl()
+        
+        alertPresenter = AlertPresenterImpl(viewController: self)
         questionFactory?.requestNextQuestion()
+        
+        showLoadingIndicator()
+        questionFactory?.loadData()
     }
     
     // приватный метод конвертации, который принимает моковый вопрос и возвращает вью модель для главного экрана
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionCount)")
         return questionStep
@@ -104,6 +109,34 @@ final class MovieQuizViewController: UIViewController {
         return resultMessage
     }
     
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.isHidden = true
+    }
+    
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        
+        let alertModel = AlertModel(
+            title: "Ошибка",
+            message: "Ошибка соединения",
+            buttonText: "Попробовать еще раз") { [weak self] in
+                guard let self = self else { return }
+                
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+                
+                self.questionFactory?.requestNextQuestion()
+            }
+        
+        alertPresenter?.show(alertModel: alertModel)
+    }
+    
+    // MARK: - Buttons
     // метод вызывается, когда пользователь нажимает на кнопку "Да"
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         let givenAnswer = true
@@ -118,10 +151,20 @@ final class MovieQuizViewController: UIViewController {
     
 }
 
+// MARK: - Extentions
 extension MovieQuizViewController: QuestionFactoryDelegate {
     func didReceiveQuestion(_ question: QuizQuestion) {
         self.currentQuestion = question
         let viewModel = self.convert(model: question)
         self.show(quiz: viewModel)
+    }
+    
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
     }
 }
