@@ -4,7 +4,7 @@
     <accessibilityOverrides/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -104,10 +104,15 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Kx9-fl-Vf9">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="Kx9-fl-Vf9" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="04Y-pn-dz4"/>
+                            <constraint firstItem="Kx9-fl-Vf9" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7Tm-VZ-cuA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="U3S-n6-Ahn" secondAttribute="bottom" id="NQO-te-1ED"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="U3S-n6-Ahn" secondAttribute="trailing" constant="20" id="RDY-54-OgW"/>
                             <constraint firstItem="U3S-n6-Ahn" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="bie-qo-niB"/>
@@ -115,6 +120,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="Kx9-fl-Vf9" id="rR0-jf-H9j"/>
                         <outlet property="counterLabel" destination="eCK-a4-fEp" id="FkM-cT-Y68"/>
                         <outlet property="imageView" destination="YG9-nS-5R3" id="1cf-7a-Pr2"/>
                         <outlet property="textLabel" destination="ZoI-rv-zjn" id="XsD-cm-k43"/>
