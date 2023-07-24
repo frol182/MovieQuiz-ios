@@ -8,7 +8,7 @@
 import Foundation
 
 protocol QuestionFactoryDelegate: AnyObject {
-    func didReceiveQuestion(_ question: QuizQuestion)
+    func didRecieveQuestion(_ question: QuizQuestion)
     func didLoadDataFromServer() // сообщение об успешной загрузке
     func didFailToLoadData(with error: Error) // сообщение об ошибке загрузки
 }
@@ -71,7 +71,7 @@ extension QuestionFactoryImpl: QuestionFactory {
                 
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    self.delegate?.didReceiveQuestion(question)
+                    self.delegate?.didRecieveQuestion(question)
                 }
             }
     }
